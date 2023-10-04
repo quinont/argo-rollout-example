@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Mensajes{% endblock %}</h1>
+{% endblock %}
+
+{% block msg %}
+<br/>
+<br/>
+<h1>El mensaje es: {{ msg }}</h1>
+<br/>
+<br/>
+{% endblock %}
+
+{% block changemsg %}
+  <form method="post">
+    <label for="body">Nuevo Mensaje:</label>
+    <textarea name="body" id="body"></textarea>
+    <input type="submit" value="Cambiar mensaje">
+  </form>
+{% endblock %}
