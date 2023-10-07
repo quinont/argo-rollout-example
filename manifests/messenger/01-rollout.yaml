@@ -60,11 +60,11 @@ spec:
             - primary
       steps:
       - setWeight: 10
-      - pause: {duration: 2m}
+      - pause: {duration: 3m}
       - setWeight: 30
-      - pause: {duration: 3m}
+      - pause: {duration: 2m}
       - setWeight: 50
-      - pause: {duration: 3m}
+      - pause: {duration: 2m}
       - setWeight: 80
       - pause: {duration: 2m}
       analysis:

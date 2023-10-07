@@ -1,4 +1,4 @@
-cd $HOME/samples/addons/
+cd $HOME/istio-1.19.1/samples/addons/
 kubectl apply -f prometheus.yaml
 kubectl apply -f kiali.yaml
 kubectl apply -f jaeger.yaml
