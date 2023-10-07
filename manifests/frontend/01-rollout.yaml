@@ -17,16 +17,16 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: frontend
+        image: quinont/messenger-frontend:1
         env:
         - name: ERROR_THRESHOLD
-          value: 0
+          value: "0"
         - name: HOST_MESSENGER
           value: "messenger.messenger"
         - name: PORT_MESSENGER
-          value: 8080
+          value: "80"
         - name: PATH_MESSENGER
-          value: "/messange"
+          value: "/message"
         ports:
         - containerPort: 8080
           name: app-port

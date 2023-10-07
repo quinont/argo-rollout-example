@@ -14,7 +14,7 @@ spec:
     failureLimit: 3
     provider:
       prometheus:
-        address: http://prometheus-server.istio-system
+        address: http://prometheus.istio-system:9090
         query: |
           sum(irate(
             istio_requests_total{  
@@ -35,7 +35,7 @@ spec:
     failureLimit: 3
     provider:
       prometheus:
-        address: http://prometheus-server.monitoring
+        address: http://prometheus.istio-system:9090
         query: |
           sum(irate(
             istio_request_duration_milliseconds_sum{

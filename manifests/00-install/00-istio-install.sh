@@ -10,10 +10,12 @@ istioctl install --set profile=demo -y
 
 kubectl patch svc istio-ingressgateway -n istio-system --type='json' -p='[{"op": "replace", "path": "/spec/type", "value": "NodePort"}]'
 
-kubectl create namespace messenger 
-kubectl create namespace frontend
+cd $HOME
 
-kubectl label namespace messenger istio-injection=enabled
-kubectl label namespace frontend istio-injection=enabled
+kubectl create namespace argo-rollouts
+kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/download/v1.6.0/install.yaml
 
-cd samples/addons/
+curl -LO https://github.com/argoproj/argo-rollouts/releases/download/v1.6.0/kubectl-argo-rollouts-linux-amd64
+chmod +x ./kubectl-argo-rollouts-linux-amd64
+mv ./kubectl-argo-rollouts-linux-amd64 /usr/local/bin/kubectl-argo-rollouts
+

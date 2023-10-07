@@ -17,12 +17,12 @@ spec:
     spec:
       containers:
       - name: messenger
-        image: messenger
+        image: quinont/messenger-backend:1
         env:
         - name: ERROR_THRESHOLD
-          value: 0
+          value: "0"
         - name: MAX_DELAY_MS
-          value: 0
+          value: "0"
         ports:
         - containerPort: 8080
           name: app-port
