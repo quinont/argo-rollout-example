@@ -8,8 +8,8 @@ bp = Blueprint("frontend", __name__)
 error_threshold = int(os.getenv('ERROR_THRESHOLD', 0))
 
 # Leer de variables de entorno, donde esta el sistema mensaje.
-HOST_MESSENGER = os.getenv('HOST_MESSENGER', '192.168.0.226')
-PORT_MESSENGER = os.getenv('PORT_MESSENGER', '8081')
+HOST_MESSENGER = os.getenv('HOST_MESSENGER', 'localhost')
+PORT_MESSENGER = os.getenv('PORT_MESSENGER', '8080')
 PATH_MESSENGER = os.getenv('PATH_MESSENGER', '/message')
 
 URL_MESSENGER = f"http://{HOST_MESSENGER}:{PORT_MESSENGER}{PATH_MESSENGER}"

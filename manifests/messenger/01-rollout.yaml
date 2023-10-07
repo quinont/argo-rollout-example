@@ -1,0 +1,76 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: messenger
+  namespace: messenger
+  labels:
+    app: messenger
+spec:
+  selector:
+    matchLabels:
+      app: messenger
+  template:
+    metadata:
+      labels:
+        app: messenger
+        istio-injection: enabled
+    spec:
+      containers:
+      - name: messenger
+        image: messenger
+        env:
+        - name: ERROR_THRESHOLD
+          value: 0
+        - name: MAX_DELAY_MS
+          value: 0
+        ports:
+        - containerPort: 8080
+          name: app-port
+        livenessProbe:
+          httpGet:
+            path: /check
+            port: app-port
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /check
+            port: app-port
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256Mi
+          requests:
+            cpu: 80m
+            memory: 128Mi
+  strategy:
+    canary:
+      canaryService: messenger-canary
+      stableService: messenger
+      trafficRouting:
+        istio:
+          virtualService:
+            name: messenger
+            routes:
+            - primary
+      steps:
+      - setWeight: 10
+      - pause: {duration: 2m}
+      - setWeight: 30
+      - pause: {duration: 3m}
+      - setWeight: 50
+      - pause: {duration: 3m}
+      - setWeight: 80
+      - pause: {duration: 2m}
+      analysis:
+        templates:
+        - templateName: avial-latency-metric
+        startingStep: 2
+        args:
+        - name: service-name
+          value: "messenger-canary.messenger.svc.cluster.local"

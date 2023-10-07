@@ -1,0 +1,25 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: frontend
+  namespace: frontend
+  labels:
+    app: frontend
+spec:
+  gateways:
+  - frontend-gw
+  hosts:
+  - "*"
+  http:
+  - name: primary
+    route:
+    - destination:
+        host: frontend
+        port:
+          number: 80
+      weight: 100
+    - destination:
+        host: frontend-preview
+        port:
+          number: 80
+      weight: 0

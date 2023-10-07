@@ -1,0 +1,60 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: frontend
+  namespace: frontend
+  labels:
+    app: frontend
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+        istio-injection: enabled
+    spec:
+      containers:
+      - name: frontend
+        image: frontend
+        env:
+        - name: ERROR_THRESHOLD
+          value: 0
+        - name: HOST_MESSENGER
+          value: "messenger.messenger"
+        - name: PORT_MESSENGER
+          value: 8080
+        - name: PATH_MESSENGER
+          value: "/messange"
+        ports:
+        - containerPort: 8080
+          name: app-port
+        livenessProbe:
+          httpGet:
+            path: /check
+            port: app-port
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /check
+            port: app-port
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256Mi
+          requests:
+            cpu: 80m
+            memory: 128Mi
+  strategy:
+    blueGreen:
+      activeService: frontend
+      previewService: frontend-preview
+      autoPromotionEnabled: true
+      autoPromotionSeconds: 30
