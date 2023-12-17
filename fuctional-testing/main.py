@@ -29,12 +29,33 @@ def clone_repo(repo_url, commit_hash):
     return repo_dir
 
 
+def install_requirements(repo_dir, folder):
+    """
+    Instala las dependencias necesarias para correr los tests
+
+    Args:
+        repo_dir: El directorio del repo.
+        folder: El directorio donde estan las pruebas
+
+    Returns:
+        El exit code del pip install
+    """
+    path_to_requirements = os.path.join(repo_dir, folder, "requirements.txt")
+    if os.path.isfile(path_to_requirements):
+        print("Se encontro un archivo requirements.txt, instalando")
+        return subprocess.call(["pip3", "install", "-r", path_to_requirements])
+
+    print("No se encontro un archivo requirements.txt")
+    return 0
+
+
 def run_tests(repo_dir, folder):
     """
     Ejecuta los test unitarios de un repo.
 
     Args:
         repo_dir: El directorio del repo.
+        folder: El directorio donde estan las pruebas
 
     Returns:
         El exit code de los test.
@@ -62,6 +83,10 @@ if __name__ == "__main__":
         raise Exception("No se encontro variable de entorno FOLDER_TEST")
 
     repo_dir_clone = clone_repo(repo_url, commit_hash)
+    exit_code_install = install_requirements(repo_dir_clone, folder_test)
+    if exit_code_install != 0:
+        raise Exception("No se pudo instalar los requirements para los test.")
+
     exit_code = run_tests(repo_dir_clone, folder_test)
     if exit_code != 0:
-        raise Exception("Los test fallaron")
+        raise Exception("Los test fallaron.")
