@@ -2,17 +2,16 @@ import requests
 import unittest
 import json
 import time
+import os
 from concurrent.futures import ThreadPoolExecutor
 
 
 class TestAPI(unittest.TestCase):
 
     def setUp(self):
-        #with open('config.json') as json_file:
-        #    self.config = json.load(json_file)
-        #self.base_url = self.config['base_url']
-        #self.headers = self.config['headers']
-        self.base_url = "http://localhost:8080/message"
+        self.base_url = os.getenv("BASE_URL")
+        if self.base_url is None:
+            raise Exception("No se encontro variable de entorno BASE_URL")
         self.headers = {"Content-Type": "application/json"}
 
     def make_request(self):
@@ -55,7 +54,6 @@ class TestAPI(unittest.TestCase):
 
         # Asegurarse de que el tiempo promedio de respuesta no sea mayor a 200 ms
         self.assertLessEqual(avg_response_time, 0.2, "El tiempo promedio de respuesta supera los 200 ms")
-
 
     def test_post_request(self):
         data = {"new_msg": "nuevo mensaje"}
