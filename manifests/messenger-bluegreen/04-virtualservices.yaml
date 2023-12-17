@@ -1,0 +1,23 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: messenger
+  namespace: messenger
+  labels:
+    app: messenger
+spec:
+  hosts:
+  - messenger.messenger
+  http:
+  - name: primary
+    route:
+    - destination:
+        host: messenger
+        port:
+          number: 80
+      weight: 100
+    - destination:
+        host: messenger-canary
+        port:
+          number: 80
+      weight: 0

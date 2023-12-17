@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: fuctional-testing
+  namespace: messenger
+spec:
+  args:
+  - name: repo-url
+  - name: folder-test
+  - name: base-url
+  - name: commit-hash
+  - name: functional-version
+    value: 1
+  metrics:
+  - name: functional-testing
+    provider:
+      job:
+        metadata:
+          labels:
+            app: functionaltest
+        spec:
+          backoffLimit: 1
+          template:
+            spec:
+              containers:
+              - name: functionaltest
+                image: quinont/fuctional-testing:{{functional-version}}
+                env:
+                - name: REPO_URL
+                  value: {{repo-url}}
+                - name: FOLDER_TEST
+                  value: {{folder-test}}
+                - name: BASE_URL
+                  value: {{base-url}}
+                - name: COMMIT_HASH
+                  value: {{commit-hash}}
+              restartPolicy: Never

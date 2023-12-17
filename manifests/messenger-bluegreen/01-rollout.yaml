@@ -1,0 +1,68 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: messenger
+  namespace: messenger
+  labels:
+    app: messenger
+spec:
+  selector:
+    matchLabels:
+      app: messenger
+  template:
+    metadata:
+      labels:
+        app: messenger
+        istio-injection: enabled
+    spec:
+      containers:
+      - name: messenger
+        image: quinont/messenger-backend:1
+        env:
+        - name: ERROR_THRESHOLD
+          value: "0"
+        - name: MAX_DELAY_MS
+          value: "0"
+        ports:
+        - containerPort: 8080
+          name: app-port
+        livenessProbe:
+          httpGet:
+            path: /check
+            port: app-port
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /check
+            port: app-port
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256Mi
+          requests:
+            cpu: 80m
+            memory: 128Mi
+  strategy:
+    blueGreen:
+      autoPromotionEnabled: true
+      autoPromotionSeconds: 60
+      activeService: messenger
+      previewService: messenger-preview
+      prePromotionAnalysis:
+        templates:
+        - templateName: fuctional-testing
+        args:
+        - name: repo-url
+          value: "https://github.com/quinont/argo-rollout-example"
+        - name: folder-test
+          value: "messenger/functional/"
+        - name: base-url
+          value: "http://messenger-preview/message"
+        - name: commit-hash
+          value: d929b1f716cf03b66305108b13dca1fee843053b
