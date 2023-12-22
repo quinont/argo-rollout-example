@@ -65,4 +65,4 @@ spec:
         - name: base-url
           value: "http://messenger-preview/message"
         - name: commit-hash
-          value: d929b1f716cf03b66305108b13dca1fee843053b
+          value: 9c819dc27da509153489005d4ea3dc59be383011
