@@ -69,6 +69,10 @@ class TestAPI(unittest.TestCase):
         print(f"Respuesta esperada: {respuesta_esperada}")
         self.assertEqual(response_json, respuesta_esperada, "La respuesta no es igual")
 
+    # Delay para las pruebas
+    def test_only_for_delay(self):
+        time.sleep(120)
+
 
 if __name__ == '__main__':
     unittest.main()
